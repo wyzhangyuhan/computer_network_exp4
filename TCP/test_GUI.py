@@ -1,6 +1,7 @@
 from tkinter import *
 import time
 from socket import * # 导入 socket 模块
+from tkinter import filedialog
 
 def main():
 
@@ -50,6 +51,13 @@ def main():
         if event.keysym =='Up':
             sendMsg()
 
+    def openfile():
+        sfname = filedialog.askopenfilename(title='选择要传输的文件', filetypes=[('All Files', '*')])
+        file_text = sfname.split('/')[-1]
+        file_text = 'file-' + file_text
+        txtMsg.insert(END,file_text)
+
+
     #服务器连接通信
     host = 'localhost'
     port = 8712
@@ -78,7 +86,8 @@ def main():
     txtMsg = Text(frmLC)
     txtMsg.bind("<KeyPress-Up>", sendMsgEvent)
     btnSend = Button(frmLB, text = '发送', width = 8, command = sendMsg)
-    btnCancel =Button(frmLB, text = '取消', width = 8, command = cancelMsg)
+    btnCancel = Button(frmLB, text = '取消', width = 8, command = cancelMsg)
+    btnselect = Button(frmLB, text = '选择文件', width = 8, command = openfile)
     imgInfo = PhotoImage(file = "13.gif")
     lblImage = Label(frmRT, image = imgInfo)
     lblImage.image = imgInfo
@@ -97,6 +106,7 @@ def main():
 
     btnSend.grid(row = 2, column = 0)
     btnCancel.grid(row = 2, column = 1)
+    btnselect.grid(row = 2, column = 2) 
     lblImage.grid()
     txtMsgList.grid()
     txtMsg.grid()
