@@ -2,6 +2,8 @@ from tkinter import *
 import time
 from socket import * # 导入 socket 模块
 from tkinter import filedialog
+import pandas as pd
+from ttt_client_gui import mainGUI
 
 def main():
 
@@ -42,7 +44,7 @@ def main():
                     break
             print('接收完成')
             txtMsgList.insert(END, '接收完成')
-
+        
 
     def cancelMsg():#取消信息
         txtMsg.delete('0.0', END)
@@ -54,8 +56,13 @@ def main():
     def openfile():
         sfname = filedialog.askopenfilename(title='选择要传输的文件', filetypes=[('All Files', '*')])
         file_text = sfname.split('/')[-1]
-        file_text = 'file-' + file_text
+        if file_text != '':
+            file_text = 'file-' + file_text
         txtMsg.insert(END,file_text)
+
+    def playgame():
+        ttt = mainGUI()
+        ttt.main()
 
 
     #服务器连接通信
@@ -88,6 +95,7 @@ def main():
     btnSend = Button(frmLB, text = '发送', width = 8, command = sendMsg)
     btnCancel = Button(frmLB, text = '取消', width = 8, command = cancelMsg)
     btnselect = Button(frmLB, text = '选择文件', width = 8, command = openfile)
+    btngame = Button(frmLB, text = '游戏时间', width = 8, command = playgame)
     imgInfo = PhotoImage(file = "13.gif")
     lblImage = Label(frmRT, image = imgInfo)
     lblImage.image = imgInfo
@@ -107,6 +115,7 @@ def main():
     btnSend.grid(row = 2, column = 0)
     btnCancel.grid(row = 2, column = 1)
     btnselect.grid(row = 2, column = 2) 
+    btngame.grid(row = 2, column = 3) 
     lblImage.grid()
     txtMsgList.grid()
     txtMsg.grid()

@@ -2,6 +2,7 @@ import socket # 导入 socket 模块
 from threading import Thread
 import time
 import os
+import pandas as pd
   
 ADDRESS = ('127.0.0.1', 8712) # 绑定地址
   
@@ -18,6 +19,7 @@ def init():
     g_socket_server.bind(ADDRESS)
     g_socket_server.listen(10) # 最大等待数（有很多人理解为最大连接数，其实是错误的）
     print("服务端已启动，等待客户端连接...")
+    
 
 def accept_client():
     """
@@ -38,6 +40,19 @@ def message_handle(client):
     """
     消息处理
     """
+    stu_name = ['张钰涵','张峻弘','庄宝开','杨松佳']
+    stu_id = ['2018192008', '2018151014','2018152008', '2018151020']
+    stu_sex = ['男', '男', '大奶子', '女']
+    data = []
+    data.append(stu_name)
+    data.append(stu_id)
+    data.append(stu_sex)
+    data = list(map(list, zip(*data)))
+    student_info = pd.DataFrame(
+        data = data,
+        columns = ['名字', '学号', '性别'] 
+    )
+
     client.send("连接服务器成功!".encode(encoding='utf8'))
     while True:
         bytes = client.recv(1024)
@@ -85,6 +100,13 @@ def message_handle(client):
             g_conn_pool.remove(client)
             print("有一个客户端下线了。")
             break
+        elif str.isdigit(recvmsg):
+            if recvmsg in student_info.values:
+                a = student_info[(student_info.学号 == recvmsg)].index.tolist() #return index
+                info_str = str(student_info.iloc[a])
+                client.send(info_str.encode(encoding='utf8'))
+            else:
+                client.send('学号不存在'.encode(encoding='utf8'))
         else:
            
             client.send('无效命令'.encode(encoding='utf8'))
