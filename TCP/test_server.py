@@ -3,6 +3,7 @@ from threading import Thread
 import time
 import os
 import pandas as pd
+from baidutrans import BaiduTranslate
   
 ADDRESS = ('127.0.0.1', 8712) # 绑定地址
   
@@ -89,10 +90,17 @@ def message_handle(client):
                     file.close()
                     break
             client.send('EOF'.encode(encoding='utf8'))
-            
+        
+        elif 'trans-' in recvmsg:
+            tmpt = recvmsg.split('-')
+            BaiduTranslate_test = BaiduTranslate(tmpt[0],tmpt[1])
+            Results = BaiduTranslate_test.BdTrans(tmpt[2])#要翻译的词组
+            client.send(Results.encode(encoding='utf8'))
+
         elif recvmsg == 'ls':
             cfiles = str([d for d in os.listdir('.')])
             client.send(cfiles.encode(encoding='utf8'))
+            
         elif recvmsg=='exit':
             client.send('bye'.encode(encoding='utf8'))
             client.close()

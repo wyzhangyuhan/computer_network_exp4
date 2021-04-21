@@ -4,6 +4,9 @@ from socket import * # 导入 socket 模块
 from tkinter import filedialog
 import pandas as pd
 from ttt_client_gui import mainGUI
+from baidutrans import BaiduTranslate
+from translate import Translate
+
 
 def main():
 
@@ -22,6 +25,7 @@ def main():
         txtMsgList.insert(END, recvmsg+ '\n')
         if 'file-' in sendmsg:
             filename = sendmsg.split('-')[-1]
+        
         if recvmsg == 'bye':
             app.update()
             time.sleep(0.5)
@@ -60,6 +64,11 @@ def main():
             file_text = 'file-' + file_text
         txtMsg.insert(END,file_text)
 
+    def translate():
+        tmp_t = Translate()
+        tmp_t.main()
+
+
     def playgame():
         ttt = mainGUI()
         ttt.main()
@@ -96,6 +105,7 @@ def main():
     btnCancel = Button(frmLB, text = '取消', width = 8, command = cancelMsg)
     btnselect = Button(frmLB, text = '选择文件', width = 8, command = openfile)
     btngame = Button(frmLB, text = '游戏时间', width = 8, command = playgame)
+    btntrans = Button(frmLB, text = '翻译文字', width = 8, command = translate)
     imgInfo = PhotoImage(file = "13.gif")
     lblImage = Label(frmRT, image = imgInfo)
     lblImage.image = imgInfo
@@ -116,6 +126,7 @@ def main():
     btnCancel.grid(row = 2, column = 1)
     btnselect.grid(row = 2, column = 2) 
     btngame.grid(row = 2, column = 3) 
+    btntrans.grid(row = 2, column = 4) 
     lblImage.grid()
     txtMsgList.grid()
     txtMsg.grid()
