@@ -12,9 +12,14 @@ import hashlib
 # PYQT
 from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QVBoxLayout, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 import Ui_login
 import Ui_main
+
+# Baidu Translation API
+import baidutrans as tran
+
+# TTT
+import ttt_client_gui as ttt
 
 MTU = 32*1024
 
@@ -30,6 +35,8 @@ class UDPChatDesktop():
         self.onlinelist = []
         self.chatlist = []
         self.ollm = QtCore.QStringListModel()
+        self.trans_cursor = -1
+        self.bdtrans = tran.BaiduTranslate("auto", "zh")
 
         # setup login UI
         self._set_login(dialog)
@@ -59,6 +66,13 @@ class UDPChatDesktop():
         self.mui.fileButton.clicked.connect(self._main_file_transfer)
         self.mui.searchBtn.clicked.connect(self._main_search_history)
         self.mui.picButton.clicked.connect(self._main_send_diy_emoji)
+        self.mui.tttButton.clicked.connect(self._main_play_ttt)
+
+        self.mui.transButton.clicked.connect(self._main_trans_msg)
+        self.mui.transUpButton.clicked.connect(lambda: self._main_move_cursor(-1))
+        self.mui.transDownButton.clicked.connect(lambda: self._main_move_cursor(1))
+
+        self.mui.tickleButton.clicked.connect(self._main_tickle)
 
         # set the notice of input box
         self.mui.userInput.setPlaceholderText("Input your message!")
@@ -256,7 +270,99 @@ class UDPChatDesktop():
             for each in self.chatlist:
                 msg = f"<font color='{each[4]}'>{each[0]}<br>{each[1]}: {each[3]}</font><br>"
                 self.mui.chatHistory.append(msg)
+
+    def _main_play_ttt(self):
+        ttt_main = ttt.mainGUI()
+        ttt_main.main()
+        pass
+
+    def _main_trans_msg(self):
+        chat = self.chatlist[self.trans_cursor]
         
+        # if is not txt, then return error
+        if chat[2] != "txt":
+            print("You can only translate 'txt' chat entry.")
+            return
+        
+        msg = chat[3]
+        
+        # translating
+        # trans_msg = "This is a test..."
+        isok, trans_msg = self.bdtrans.BdTrans(msg)
+
+        # error, early return
+        if not isok:
+            print("Error in translating.")
+            return
+
+        # update chat history
+        self.mui.chatHistory.clear()
+        curs = self.mui.chatHistory.textCursor()
+
+        for ii in range(len(self.chatlist)):
+            each = self.chatlist[ii]
+            if ii == self.trans_cursor:
+                chatmsg = f"<font color='{each[4]}'>{each[0]}<br>{each[1]}: {trans_msg} 👈</font><br>"
+                pos = len(self.mui.chatHistory.toPlainText())
+            else:
+                chatmsg = f"<font color='{each[4]}'>{each[0]}<br>{each[1]}: {each[3]}</font><br>"
+            self.mui.chatHistory.append(chatmsg)
+        
+        curs.setPosition(pos)
+        self.mui.chatHistory.setTextCursor(curs)
+
+    def _main_move_cursor(self, direction: int):
+        index = self.trans_cursor
+        if index < 0:
+            # initialize
+            index = 0
+        else:
+            # otherwise, move it
+            if direction > 0:
+                # if current cursor is the last one, early return
+                if index < len(self.chatlist)-1:
+                    index += 1
+                else: return
+            else:
+                # if current cursor is the first one, early return
+                if index > 0:
+                    index -= 1
+                else: return
+
+        # set the cursor
+        self.trans_cursor = index
+        self.mui.chatHistory.clear()
+        curs = self.mui.chatHistory.textCursor()
+
+        for ii in range(len(self.chatlist)):
+            each = self.chatlist[ii]
+            if ii == self.trans_cursor:
+                chatmsg = f"<font color='{each[4]}'>{each[0]}<br>{each[1]}: {each[3]} 👈</font><br>"
+                pos = len(self.mui.chatHistory.toPlainText())
+            else:
+                chatmsg = f"<font color='{each[4]}'>{each[0]}<br>{each[1]}: {each[3]}</font><br>"
+            self.mui.chatHistory.append(chatmsg)
+        
+        curs.setPosition(pos)
+        self.mui.chatHistory.setTextCursor(curs)
+
+    def _main_tickle(self):
+        # just for funny.
+        # tickle someone haha
+        
+        # select chat
+        chat = self.chatlist[self.trans_cursor]
+
+        tick_who = chat[1]
+        if tick_who == self.nickname:
+            tick_who = "myself"
+        msg = f"<b>I tickled {tick_who} and say: GOOD!</b>"
+
+        # send the message
+        self.__update_chat_txt("@myself@", msg)
+        data = json.dumps(["txt", {"tolist": self.sendtolist}, msg])
+        self.socket.sendto(data.encode("utf-8"), self.server_addr)
+
 
     def __update_chat_txt(self, name: str, msg: str):
         now_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) 
@@ -296,14 +402,14 @@ class UDPChatDesktop():
         with open(msg_path, "wb+") as f:
             binary_data = b64.b64decode(data)
             f.write(binary_data)
+        msg = f"<a href='{msg_path}'>{fname}"
 
         self.chatlist.append(
-            (now_time, name, "fle", msg_path, color)
+            (now_time, name, "fle", msg, color)
         )
         
-        color_msg = f"<font color='{color}'>{now_time}<br>{name}: <a href='{msg_path}'>{fname}</font><br>"
+        color_msg = f"<font color='{color}'>{now_time}<br>{name}: {msg}</font><br>"
         self.mui.chatHistory.append(color_msg)
-
 
     def __update_chat_emj(self, name: str, emjcode: int, appdix: str):
         emojis = ["concerned", "facepalm", "smart", "smirk"]

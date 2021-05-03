@@ -422,6 +422,58 @@
      <string>🖼</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="transButton">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>410</y>
+      <width>31</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>🔁</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="transUpButton">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>410</y>
+      <width>31</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>🔼</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="transDownButton">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>410</y>
+      <width>31</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>🔽</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="tickleButton">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>410</y>
+      <width>31</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>✋</string>
+    </property>
+   </widget>
    <zorder>chatHistory</zorder>
    <zorder>txtSubmitBtn</zorder>
    <zorder>userInput</zorder>
@@ -442,6 +494,10 @@
    <zorder>tttButton</zorder>
    <zorder>label_3</zorder>
    <zorder>picButton</zorder>
+   <zorder>transButton</zorder>
+   <zorder>transUpButton</zorder>
+   <zorder>transDownButton</zorder>
+   <zorder>tickleButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
