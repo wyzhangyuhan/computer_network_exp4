@@ -69,12 +69,13 @@ def message_handle(client):
         elif 'file-' in recvmsg:
             print('服务端发送信息: ', 'downloading files')
             cfiles = str([d for d in os.listdir('.')])
-            filename = recvmsg.split('-')[-1]
+            filename = recvmsg.split('-')[-2]
 
             try:
                 file = open(filename, 'rb+')
                 print('服务端信息: ', filename)
-                client.send('ok'.encode(encoding='utf8'))
+                tmpstr = 'ok-' + filename
+                client.send(tmpstr.encode(encoding='utf8'))
             except:
                 print('服务端信息: ', '目标文件不存在')
                 client.send('404 Not Found'.encode(encoding='utf8'))
@@ -101,8 +102,12 @@ def message_handle(client):
             cfiles = str([d for d in os.listdir('.')])
             client.send(cfiles.encode(encoding='utf8'))
             
-        elif recvmsg=='exit':
-            client.send('bye'.encode(encoding='utf8'))
+        elif 'exit' in recvmsg:
+            # for i in range(0,2):
+            client.send('Bye (server send closed)\nBye (server will closed)'.encode(encoding='utf8'))
+            
+        elif 'fin' in recvmsg:
+            # client.send('Bye (recieved 4th wave)'.encode(encoding='utf8'))
             client.close()
             # 删除连接
             g_conn_pool.remove(client)
@@ -116,7 +121,6 @@ def message_handle(client):
             else:
                 client.send('学号不存在'.encode(encoding='utf8'))
         else:
-           
             client.send('无效命令'.encode(encoding='utf8'))
 
 if __name__ == '__main__':
@@ -136,4 +140,6 @@ if __name__ == '__main__':
             print("当前在线人数：", len(g_conn_pool))
         elif cmd == '2':
             exit()
+        elif cmd == '3':
+            print(g_conn_pool)
             

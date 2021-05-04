@@ -7,30 +7,37 @@ from ttt_client_gui import mainGUI
 from baidutrans import BaiduTranslate
 from translate import Translate
 
+import myglobal
+
 
 def main():
-
     def sendMsg():#发送消息
         client_strMsg = "客户端发送:" + time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())+ '\n'
         txtMsgList.insert(END, client_strMsg, 'greencolor')
         txtMsgList.insert(END, txtMsg.get('1.0', END))
-        sendmsg = txtMsg.get('1.0', END)[:-1]
-        s.send(sendmsg.encode())
+        sendmsg = txtMsg.get('1.0', END)[:-1] #获取GUI信息框中的信息
+        s.send(sendmsg.encode()) #对信息编码后发送
         txtMsg.delete('0.0', END)
 
-        recvmsg = s.recv(1024).decode()
+        recvmsg = s.recv(1024).decode() #接收来自服务器的消息
         print('来自服务端的信息: ', recvmsg)
         server_strMsg = "服务器发送:" + time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())+ '\n'
         txtMsgList.insert(END, server_strMsg, 'bluecolor')
         txtMsgList.insert(END, recvmsg+ '\n')
+
         if 'file-' in sendmsg:
             filename = sendmsg.split('-')[-1]
         
-        if recvmsg == 'bye':
+        if 'Bye' in recvmsg:
             app.update()
-            time.sleep(0.5)
+            sendmsg = 'fin (4th wave)'
+            txtMsgList.insert(END, client_strMsg, 'greencolor')
+            txtMsgList.insert(END, sendmsg)
+            s.send(sendmsg.encode()) #对信息编码后发送
+            app.update()
+            time.sleep(1)
             exit()
-        elif recvmsg =='ok':
+        elif 'ok' in recvmsg:
             file = open(filename, 'wb')
             while True:
                 r = s.recv(1024*128)
@@ -68,13 +75,12 @@ def main():
         tmp_t = Translate()
         tmp_t.main()
 
-
     def playgame():
         ttt = mainGUI()
         ttt.main()
 
 
-    #服务器连接通信
+    #与服务器连接通信
     host = 'localhost'
     port = 8712
     s = socket(AF_INET, SOCK_STREAM) # 创建 socket 对象
