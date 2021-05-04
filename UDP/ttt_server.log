@@ -1,0 +1,28 @@
+[2021-05-02 00:53:11] INFO: Reserved port 5002
+[2021-05-02 00:53:11] INFO: Listening to port 5002
+[2021-05-02 10:41:07] INFO: Reserved port 5002
+[2021-05-02 10:41:07] INFO: Listening to port 5002
+[2021-05-02 18:47:31] INFO: Reserved port 5002
+[2021-05-02 18:47:31] INFO: Listening to port 5002
+[2021-05-02 18:49:12] INFO: Received connection from ('127.0.0.1', 63905)
+[2021-05-02 18:49:33] INFO: Received connection from ('127.0.0.1', 63920)
+[2021-05-02 18:49:33] INFO: Player 2 is matched with player 1
+[2021-05-02 18:49:57] INFO: q
+[2021-05-02 18:49:57] WARNING: Player 1 connection lost.
+[2021-05-02 18:49:57] WARNING: Player 1 connection lost.
+[2021-05-02 18:49:57] WARNING: Game between 2 and 1 is finished unexpectedly.
+[2021-05-02 18:50:11] INFO: Received connection from ('127.0.0.1', 63935)
+[2021-05-02 18:50:12] INFO: Received connection from ('127.0.0.1', 63936)
+[2021-05-02 18:50:12] INFO: Player 4 is matched with player 3
+[2021-05-02 21:46:59] INFO: Reserved port 5002
+[2021-05-02 21:46:59] INFO: Listening to port 5002
+[2021-05-02 21:48:28] INFO: Received connection from ('127.0.0.1', 50073)
+[2021-05-02 21:48:30] INFO: Received connection from ('127.0.0.1', 50074)
+[2021-05-02 21:48:30] INFO: Player 2 is matched with player 1
+[2021-05-02 21:48:43] INFO: 
+[2021-05-02 21:48:43] WARNING: Player 2 connection lost.
+[2021-05-02 21:48:43] WARNING: Player 2 connection lost.
+[2021-05-02 21:48:43] WARNING: Game between 2 and 1 is finished unexpectedly.
+[2021-05-02 21:49:13] INFO: Received connection from ('127.0.0.1', 50089)
+[2021-05-02 21:49:14] INFO: Received connection from ('127.0.0.1', 50091)
+[2021-05-02 21:49:14] INFO: Player 4 is matched with player 3
