@@ -7,7 +7,7 @@ from ttt_client_gui import mainGUI
 from baidutrans import BaiduTranslate
 from translate import Translate
 
-import myglobal
+# import myglobal
 
 
 def main():
@@ -16,6 +16,10 @@ def main():
         txtMsgList.insert(END, client_strMsg, 'greencolor')
         txtMsgList.insert(END, txtMsg.get('1.0', END))
         sendmsg = txtMsg.get('1.0', END)[:-1] #获取GUI信息框中的信息
+        print(sendmsg)
+        if (sendmsg.strip() == ""):
+            print("Warning: dont send empty!!!!!!!!!!")
+            return
         s.send(sendmsg.encode()) #对信息编码后发送
         txtMsg.delete('0.0', END)
 
@@ -25,8 +29,15 @@ def main():
         txtMsgList.insert(END, server_strMsg, 'bluecolor')
         txtMsgList.insert(END, recvmsg+ '\n')
 
-        if 'file-' in sendmsg:
-            filename = sendmsg.split('-')[-1]
+        if 'file:' in sendmsg:
+            # 分析 file 命令的输入
+            argvs = sendmsg.split(':')
+            if len(argvs) == 2:
+                filename = "dup-" + argvs[1]
+            elif len(argvs) == 3:
+                filename = argvs[2]
+            else:
+                print("invalid input")
         
         if 'Bye' in recvmsg:
             app.update()
@@ -38,7 +49,7 @@ def main():
             time.sleep(1)
             exit()
         elif 'ok' in recvmsg:
-            file = open(filename, 'wb')
+            file = open("Download/" + filename, 'wb')
             while True:
                 r = s.recv(1024*128)
                 if len(r)==0:
@@ -60,7 +71,7 @@ def main():
     def cancelMsg():#取消信息
         txtMsg.delete('0.0', END)
 
-    def sendMsgEvent(event):#发送消息事件
+    def sendMsgEvent(event: Event):#发送消息事件
         if event.keysym =='Up':
             sendMsg()
 
@@ -68,7 +79,7 @@ def main():
         sfname = filedialog.askopenfilename(title='选择要传输的文件', filetypes=[('All Files', '*')])
         file_text = sfname.split('/')[-1]
         if file_text != '':
-            file_text = 'file-' + file_text
+            file_text = 'file:' + file_text
         txtMsg.insert(END,file_text)
 
     def translate():
