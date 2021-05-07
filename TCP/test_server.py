@@ -43,7 +43,7 @@ def message_handle(client):
     """
     stu_name = ['张钰涵','张峻弘','庄宝开','杨松佳']
     stu_id = ['2018192008', '2018151014','2018152008', '2018151020']
-    stu_sex = ['男', '男', '大奶子', '女']
+    stu_sex = ['男', '男', '女', '女']
     data = []
     data.append(stu_name)
     data.append(stu_id)
@@ -59,8 +59,7 @@ def message_handle(client):
         bytes = client.recv(1024)
         recvmsg =  bytes.decode(encoding='utf8')
         # print("客户端消息:", bytes.decode(encoding='utf8'))
-        if recvmsg=='':
-            continue
+       
         print('服务端收到信息: ', recvmsg)
         if recvmsg=='time':
             ret = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) 
@@ -134,6 +133,7 @@ if __name__ == '__main__':
         cmd = input("""--------------------------
         输入1:查看当前在线人数
         输入2:关闭服务端
+        输入3:查看用户信息
         """)
         if cmd == '1':
             print("--------------------------")

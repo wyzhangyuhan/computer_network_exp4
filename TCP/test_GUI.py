@@ -7,8 +7,7 @@ from ttt_client_gui import mainGUI
 from baidutrans import BaiduTranslate
 from translate import Translate
 
-import myglobal
-
+import binascii
 
 def main():
     def sendMsg():#发送消息
@@ -63,6 +62,9 @@ def main():
     def sendMsgEvent(event):#发送消息事件
         if event.keysym =='Up':
             sendMsg()
+    
+    def endian_change(data):
+        return binascii.hexlify(binascii.unhexlify(data)[::-1])
 
     def openfile():
         sfname = filedialog.askopenfilename(title='选择要传输的文件', filetypes=[('All Files', '*')])
