@@ -36,8 +36,9 @@ def accept_client():
         thread.setDaemon(True)
         thread.start()
   
-  
-def message_handle(client):
+
+# AppleZhang 在这里加了个 client 的类型，方便 vscode 做代码补全
+def message_handle(client: socket.socket):
     """
     消息处理
     """
@@ -59,24 +60,24 @@ def message_handle(client):
         bytes = client.recv(1024)
         recvmsg =  bytes.decode(encoding='utf8')
         # print("客户端消息:", bytes.decode(encoding='utf8'))
-       
+
         print('服务端收到信息: ', recvmsg)
         if recvmsg=='time':
             ret = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) 
             
             client.send(ret.encode(encoding='utf8'))
-        elif 'file-' in recvmsg:
+        elif 'file:' in recvmsg:
             print('服务端发送信息: ', 'downloading files')
             cfiles = str([d for d in os.listdir('.')])
-            filename = recvmsg.split('-')[-2]
+            filename = recvmsg.split(':')[1]
 
             try:
                 file = open(filename, 'rb+')
                 print('服务端信息: ', filename)
-                tmpstr = 'ok-' + filename
+                tmpstr = 'ok:' + filename
                 client.send(tmpstr.encode(encoding='utf8'))
             except:
-                print('服务端信息: ', '目标文件不存在')
+                print('服务端信息: ', f'目标文件{filename}不存在')
                 client.send('404 Not Found'.encode(encoding='utf8'))
                 continue
             while True:
@@ -91,8 +92,8 @@ def message_handle(client):
                     break
             client.send('EOF'.encode(encoding='utf8'))
         
-        elif 'trans-' in recvmsg:
-            tmpt = recvmsg.split('-')
+        elif 'trans:' in recvmsg:
+            tmpt = recvmsg.split(':')
             BaiduTranslate_test = BaiduTranslate(tmpt[0],tmpt[1])
             Results = BaiduTranslate_test.BdTrans(tmpt[2])#要翻译的词组
             client.send(Results.encode(encoding='utf8'))
