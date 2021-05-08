@@ -219,6 +219,8 @@ class UDPChatDesktop():
                 jdata = json.dumps(["emj", {"type": "diy", "tolist": self.sendtolist, "fname": file_name}, file_data])
                 self.socket.sendto(jdata.encode("utf-8"), self.server_addr)
 
+                # print(file_data)
+
                 emjcode = int(hashlib.md5((self.nickname + file_name).encode()).hexdigest()[:7], base=16)
                 emjcode = abs(emjcode) + 4
                 self.__update_chat_emj("@myself@", emjcode, file_data)
@@ -229,7 +231,7 @@ class UDPChatDesktop():
 
     def _main_submit_chat(self):
         msg = self.mui.userInput.toPlainText()
-        if msg == "":
+        if msg.strip() == "":
             print("Cannot send empty message.")
             return
         
@@ -356,11 +358,16 @@ class UDPChatDesktop():
         tick_who = chat[1]
         if tick_who == self.nickname:
             tick_who = "myself"
-        msg = f"<b>I tickled {tick_who} and say: GOOD!</b>"
+        me_msg = f"<b>I tickled {tick_who} and say: GOOD!</b>"
 
         # send the message
-        self.__update_chat_txt("@myself@", msg)
-        data = json.dumps(["txt", {"tolist": self.sendtolist}, msg])
+        self.__update_chat_txt("@myself@", me_msg)
+
+        if tick_who == self.nickname:
+            tick_who = "themselves"
+        other_msg = f"<b>{self.nickname} tickled {tick_who} and say: GOOD!</b>"
+
+        data = json.dumps(["txt", {"tolist": self.sendtolist}, other_msg])
         self.socket.sendto(data.encode("utf-8"), self.server_addr)
 
 
@@ -459,7 +466,7 @@ class UDPChatDesktop():
     def _message_handler(self, jsondata: bytes):
         data_type, from_who, data, appdix = json.loads(jsondata)
         if data_type == "txt":
-            print(f"<Plain> {from_who}: {data}")
+            print(f"<Text> {from_who}: {data}")
             self.__update_chat_txt(from_who, data)
         elif data_type == "emj":
             print(f"<Emoji> {from_who}: <emjcode:{data}>")
@@ -469,7 +476,7 @@ class UDPChatDesktop():
             self.__update_onlinelist(data, appdix)
             self._main_disp_online()
         elif data_type == "fle":
-            print(f"<File> {from_who}: {data}.")
+            print(f"<File> {from_who}: {data}")
             self.__update_chat_fle(from_who, data, appdix)
 
     # Listener for thread receiving data
