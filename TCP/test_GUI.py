@@ -49,23 +49,17 @@ def main():
             time.sleep(1)
             exit()
         elif 'ok' in recvmsg:
+            file_size = int(recvmsg.split(':')[-1])
             file = open("Download/" + filename, 'wb')
-            while True:
+            recv_size=0
+            while recv_size < file_size:
                 r = s.recv(1024*128)
-                if len(r)==0:
-                    file.close()
-                    break
-                if r == 'EOF':
-                    file.close()
-                    break
                 print('接收到 ', len(r), ' 字节的数据')
                 txtMsgList.insert(END, f'接收到{len(r)}字节的数据\n')
                 file.write(r)
-                if len(r) < 1024*128:
-                    file.close()
-                    break
-            print('接收完成')
-            txtMsgList.insert(END, '接收完成')
+                recv_size = recv_size + len(r)
+            print('接收完成\n')
+            txtMsgList.insert(END, '接收完成\n')
         
 
     def cancelMsg():#取消信息

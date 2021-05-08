@@ -74,7 +74,9 @@ def message_handle(client: socket.socket):
             try:
                 file = open(filename, 'rb+')
                 print('服务端信息: ', filename)
-                tmpstr = 'ok:' + filename
+                tmppath = f'./{filename}'
+                file_size = os.path.getsize(tmppath)
+                tmpstr = 'ok:' + filename + ':' + str(file_size)
                 client.send(tmpstr.encode(encoding='utf8'))
             except:
                 print('服务端信息: ', f'目标文件{filename}不存在')
@@ -90,7 +92,7 @@ def message_handle(client: socket.socket):
                 if len(r) < 1024*128:
                     file.close()
                     break
-            client.send('EOF'.encode(encoding='utf8'))
+            # client.send('EOF'.encode(encoding='utf8'))
         
         elif 'trans:' in recvmsg:
             tmpt = recvmsg.split(':')
