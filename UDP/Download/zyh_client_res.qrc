@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="pic">
+<<<<<<< HEAD
+=======
+    <file>Resources/szu.png</file>
+>>>>>>> 6146178a146fd88f571225fa9152dea1ab85d8c1
     <file>Resources/ttt.png</file>
     <file>hn_logo.png</file>
     <file>Resources/emoji_pics/concerned.png</file>

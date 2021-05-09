@@ -6,9 +6,10 @@ import pandas as pd
 from ttt_client_gui import mainGUI
 from baidutrans import BaiduTranslate
 from translate import Translate
+from endianHandler import *
 
 # import myglobal
-
+KBYTE = 1024
 
 def main():
     def sendMsg():#发送消息
@@ -23,7 +24,7 @@ def main():
         s.send(sendmsg.encode()) #对信息编码后发送
         txtMsg.delete('0.0', END)
 
-        recvmsg = s.recv(1024).decode() #接收来自服务器的消息
+        recvmsg = s.recv(KBYTE).decode() #接收来自服务器的消息
         print('来自服务端的信息: ', recvmsg)
         server_strMsg = "服务器发送:" + time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())+ '\n'
         txtMsgList.insert(END, server_strMsg, 'bluecolor')
@@ -47,13 +48,14 @@ def main():
             s.send(sendmsg.encode()) #对信息编码后发送
             app.update()
             time.sleep(1)
+            s.close()
             exit()
         elif 'ok' in recvmsg:
             file_size = int(recvmsg.split(':')[-1])
             file = open("Download/" + filename, 'wb')
             recv_size=0
             while recv_size < file_size:
-                r = s.recv(1024*128)
+                r = s.recv(KBYTE*128)
                 print('接收到 ', len(r), ' 字节的数据')
                 txtMsgList.insert(END, f'接收到{len(r)}字节的数据\n')
                 file.write(r)
@@ -68,9 +70,6 @@ def main():
     def sendMsgEvent(event: Event):#发送消息事件
         if event.keysym =='Up':
             sendMsg()
-    
-    def endian_change(data):
-        return binascii.hexlify(binascii.unhexlify(data)[::-1])
 
     def openfile():
         sfname = filedialog.askopenfilename(title='选择要传输的文件', filetypes=[('All Files', '*')])
@@ -93,9 +92,9 @@ def main():
     port = 8712
     s = socket(AF_INET, SOCK_STREAM) # 创建 socket 对象
     s.connect((host, port))
-    print(s.recv(1024).decode(encoding='utf8'))
+    print(s.recv(KBYTE).decode(encoding='utf8'))
     s.send("连接了".encode('utf8'))
-    print(s.recv(1024).decode(encoding='utf8'))
+    print(s.recv(KBYTE).decode(encoding='utf8'))
     print('连接到 ', host, ':', port)
     print('-----------------------------------')
 

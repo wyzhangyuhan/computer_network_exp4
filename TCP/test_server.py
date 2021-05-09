@@ -6,6 +6,7 @@ import pandas as pd
 from baidutrans import BaiduTranslate
   
 ADDRESS = ('127.0.0.1', 8712) # 绑定地址
+KBYTE   = 1024
   
 g_socket_server = None # 负责监听的socket
   
@@ -57,7 +58,7 @@ def message_handle(client: socket.socket):
 
     client.send("连接服务器成功!".encode(encoding='utf8'))
     while True:
-        bytes = client.recv(1024)
+        bytes = client.recv(KBYTE)
         recvmsg =  bytes.decode(encoding='utf8')
         # print("客户端消息:", bytes.decode(encoding='utf8'))
 
@@ -75,28 +76,47 @@ def message_handle(client: socket.socket):
                 print('服务端信息: ', filename)
                 tmppath = f'./{filename}'
                 file_size = os.path.getsize(tmppath)
-                tmpstr = 'ok:' + filename + ':' + str(file_size)
+                tmpstr = f'ok:{filename}:{file_size}'
                 client.send(tmpstr.encode(encoding='utf8'))
             except:
                 print('服务端信息: ', f'目标文件{filename}不存在')
                 client.send('404 Not Found'.encode(encoding='utf8'))
                 continue
+            counter = 0
             while True:
-                r = file.read(1024*128)
+                r = file.read(KBYTE*128)
+                counter += len(r)
                 if len(r)==0:
                     file.close()
                     break
                 print('发送 ', len(r), ' 字节的数据')
                 client.send(r)
-                if len(r) < 1024*128:
+                if len(r) < KBYTE*128:
                     file.close()
                     break
+            print(f"服务器信息：完成发送 {counter} 大小的文件数据.")
             # client.send('EOF'.encode(encoding='utf8'))
         
         elif 'trans:' in recvmsg:
             tmpt = recvmsg.split(':')
-            BaiduTranslate_test = BaiduTranslate(tmpt[0],tmpt[1])
-            Results = BaiduTranslate_test.BdTrans(tmpt[2])#要翻译的词组
+
+            if len(tmpt) == 2:
+                fromL = "auto"
+                toL = "zh"
+                sen = tmpt[1]
+            elif len(tmpt) == 3:
+                fromL = tmpt[1]
+                toL = "zh"
+                sen = tmpt[2]
+            else:
+                fromL = tmpt[1]
+                toL = tmpt[2]
+                sen = tmpt[3]
+
+            print(fromL, toL, sen, sep="\n")
+
+            BaiduTranslate_test = BaiduTranslate(fromL, toL)
+            ok, Results = BaiduTranslate_test.BdTrans(sen)#要翻译的词组
             client.send(Results.encode(encoding='utf8'))
 
         elif recvmsg == 'ls':

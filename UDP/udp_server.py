@@ -128,7 +128,7 @@ class UDPChatServer:
         @passwd: the password
         @addr: (IP, port) of user
         """
-        print(f"...\n{addr} send: {name}<sep><password>\n[server@udp]>> ", end="")
+        print(f"...\n{addr} send: <auth-request:username:{name}:passwd:>\n[server@udp]>> ", end="")
         try:
             # this account has been online
             if name in self.onlinelist:
