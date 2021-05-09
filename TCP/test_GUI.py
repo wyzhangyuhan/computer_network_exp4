@@ -89,7 +89,7 @@ def main():
 
 
     #与服务器连接通信
-    host = 'localhost'
+    host = '172.26.128.21'
     port = 8712
     s = socket(AF_INET, SOCK_STREAM) # 创建 socket 对象
     s.connect((host, port))

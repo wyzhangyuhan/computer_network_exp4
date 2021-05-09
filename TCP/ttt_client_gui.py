@@ -527,7 +527,7 @@ class MainGameScene(BaseScene):
 		self.client.canvas = self 
 		try:
 			# Get the host IP address
-			host = socket.gethostbyname('localhost') 
+			host = socket.gethostbyname('172.26.128.21') 
 		except:
 			# If can't get the host IP from the domain
 			tkinter.messagebox.showerror("Error", "Failed to get the game "+ 

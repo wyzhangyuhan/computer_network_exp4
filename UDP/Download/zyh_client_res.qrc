@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="pic">
+    <file>Resources/ttt.png</file>
+    <file>hn_logo.png</file>
+    <file>Resources/emoji_pics/concerned.png</file>
+    <file>Resources/emoji_pics/facepalm.png</file>
+    <file>Resources/emoji_pics/smart.png</file>
+    <file>Resources/emoji_pics/smirk.png</file>
+  </qresource>
+</RCC>

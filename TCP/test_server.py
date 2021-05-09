@@ -70,7 +70,6 @@ def message_handle(client: socket.socket):
             print('服务端发送信息: ', 'downloading files')
             cfiles = str([d for d in os.listdir('.')])
             filename = recvmsg.split(':')[1]
-
             try:
                 file = open(filename, 'rb+')
                 print('服务端信息: ', filename)
