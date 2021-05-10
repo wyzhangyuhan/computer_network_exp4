@@ -1,0 +1,76 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-04-13 21:51:34
+ * @LastEditTime: 2021-04-13 22:32:48
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \web_chatroom\web_chatroom\templates\login.html
+-->
+
+<!doctype html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="static/auth/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
+    <link href="static/auth/css/snow.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="static/auth/css/style.css" rel="stylesheet" type="text/css" media="all" />
+
+
+    <title>网页聊天室登录</title>
+</head>
+<body>
+    <div class="snow-container">
+			  <div class="snow foreground"></div>
+			  <div class="snow foreground layered"></div>
+			  <div class="snow middleground"></div>
+			  <div class="snow middleground layered"></div>
+			  <div class="snow background"></div>
+			  <div class="snow background layered"></div>
+			</div>
+    
+            <p><p><p><p>
+    <h1>欢迎来到弘牛聊天室</h1>
+    <div class="main-agileits">
+        <div class="form-w3-agile">
+                <!-- {% for error_message in get_flashed_messages() %}
+                    <div class="alert alert-warning" role="alert">
+                        {{ error_message }}
+                    </div>
+                {% endfor %}    -->
+
+                <form action="{{ url_for('auth.login') }}" method="post">
+                    <label style="color: white; text-align: left;" for="exampleInputUsername">请输入用户名</label>
+                    <input style="color: white;" type="text" class="form-control" id="exampleInputUsername" name="username" placeholder="Enter username">
+
+                    <label style="color: white; text-align: left;" for="exampleInputPassword">请输入密码</label>
+                    <input type="password" class="form-control" id="exampleInputPassword" name="password" placeholder="Password">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <div class="submit-w3l">
+                        <input type="submit" value="确认登录" class="btn btn-primary">
+                    </div>
+                    <p class="p-bottom-w3ls">还没注册？<a href="{{ url_for('auth.register') }}">点击这里注册</a> </p>
+                </form>
+        </div>
+
+    </div>
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        alert('{{ msg.message }}');
+    {% endfor %}
+</script>
+{% endif %}
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .top{
+            width: 30%;
+            height: 60px;
+            /* background: #f1f1f1; */
+        }
+        .left{
+            width: 320px;
+            height: 874px;
+            background: #f1f1f1;
+        }
+        .main{
+            width: 1580px;
+            height: 800px;
+            /* background: #f1f1f1; */
+            position: absolute;
+            left: 320px;
+            top: 60px;
+        }
+        .chart{
+            float:left;
+            /* display:inline; */
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head>
+<!-- <h1>上传文件</h1> -->
+<body>
+    <div class="top">
+        <form id="form1" method="post" action="/api/upload" enctype="multipart/form-data">
+            <div>
+                <input id="File1" type="file" name="myfile"/>  <!--后台代码中获取文件是通过form的name来标识的-->
+                <input type="submit">提交</input>
+            </div>
+        </form>
+    </div>
+
+    <div class="main" id = "main1">
+        <script>
+            var html="";
+            var plot_data = {{plot|safe}};
+            console.log(plot_data.length);
+            for(var i = 0; i < plot_data.length; i++){
+                var tmp_id = "graph" + i; 
+                html += '<div class="chart" id="'
+                + tmp_id + '">' 
+                + '</div>'
+                // console.log(tmp_id);
+            }
+            // console.log(html);
+            document.getElementById("main1").innerHTML=html;
+            for(var i = 0; i < plot_data.length; i++){
+                // console.log(plot_data[i]);
+                var tmp_plot = JSON.parse(plot_data[i]);
+                var tmp_id = "graph" + i; 
+                Plotly.plot( tmp_id, tmp_plot, {} );
+                // console.log(tmp_id);
+            }
+       
+        </script>
+    </div>
+
+    
+    <!-- <script src="{{ url_for('static', filename='js/plots.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+</body>
+</html>
+
+
